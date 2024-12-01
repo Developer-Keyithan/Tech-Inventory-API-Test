@@ -9,9 +9,10 @@ const fetchDevices = async () => {
     const devices = await response.json();
 
     tableBody.innerHTML = '';
-    devices.forEach((device) => {
+    devices.forEach((device, index) => {
       const row = document.createElement('tr');
       row.innerHTML = `
+        <td>${index+1}</td>
         <td>${device.device_name}</td>
         <td>${device.device_type}</td>
         <td>${device.brand}</td>
