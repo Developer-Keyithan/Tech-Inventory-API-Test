@@ -9,9 +9,7 @@
 body {
     display: flex;
     justify-content: center;
-    align-items: center;
     width: 100vw;
-    height: 100vh;
 }
 
 .container {
@@ -21,9 +19,9 @@ body {
     padding: 30px;
     background: #5a04aa30;
     width: 90%;
-    max-height: 75%;
     border-radius: 10px;
     box-shadow: 10px 10px 20px #0004;
+    margin-top: 200px;
 }
 
 h1 {
@@ -67,12 +65,11 @@ h1 {
     background: #360068;
 }
 
-.table {
-    max-height: 60%;
+.deviceTable {
     overflow: auto;
 }
 
-.table thead {
+.deviceTable thead {
     position: sticky;
     top: 0;
 }
@@ -85,6 +82,10 @@ table th {
     padding: 8px;
     font-size: 15px;
     color: #360068;
+}
+
+table {
+    margin-top: 50px;
 }
 
 table tr {
@@ -158,3 +159,4 @@ table th {
     background: none;
     width: 0;
 }
+
