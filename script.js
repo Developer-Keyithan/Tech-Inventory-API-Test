@@ -1,18 +1,20 @@
 const form = document.querySelector('.device-form');
-const tableBody = document.querySelector('tbody');
+const deviceTable = document.querySelector('.deviceTable tbody');
+const userTable = document.querySelector('.userTable tbody');
+const orderTable = document.querySelector('.orderTable tbody');
 
 const API_URL = 'http://localhost:3000/api/admin';
 
 const fetchDevices = async () => {
   try {
-    const response = await fetch(API_URL);
-    const devices = await response.json();
+    const deviceData = await fetch(`${API_URL}/device`);
+    const devices = await deviceData.json();
 
-    tableBody.innerHTML = '';
-    devices.forEach((device, index) => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${index+1}</td>
+    deviceTable.innerHTML = '';
+    devices.forEach((device, deviceIndex) => {
+      const deviceTableRow = document.createElement('tr');
+      deviceTableRow.innerHTML = `
+        <td>${deviceIndex+1}</td>
         <td>${device.device_name}</td>
         <td>${device.device_type}</td>
         <td>${device.brand}</td>
@@ -27,7 +29,39 @@ const fetchDevices = async () => {
         <td>${device.release_date}</td>
         <td class="btn"><button data-id="${device._id}" class="edit-btn">Edit</button><button data-id="${device._id}" class="delete-btn">Delete</button></td>
       `;
-      tableBody.appendChild(row);
+      deviceTable.appendChild(deviceTableRow);
+    });
+
+    const userData = await fetch(`${API_URL}/user`);
+    const users = await userData.json();
+
+    userTable.innerHTML = '';
+    users.forEach((user, userIndex) => {
+      const userTableRow = document.createElement('tr');
+      userTableRow.innerHTML = `
+        <td>${userIndex+1}</td>
+        <td>${user.user_name}</td>
+        <td>${user.email}</td>
+        <td>${user.device_name}</td>
+        <td class="btn"><button data-id="${user._id}" class="edit-btn">Edit</button><button data-id="${user._id}" class="delete-btn">Delete</button></td>
+      `;
+      userTable.appendChild(userTableRow);
+    });
+
+    const orderData = await fetch(`${API_URL}/user`);
+    const orders = await orderData.json();
+
+    orderTable.innerHTML = '';
+    orders.forEach((order, orderIndex) => {
+      const orderTableRow = document.createElement('tr');
+      orderTableRow.innerHTML = `
+        <td>${orderIndex+1}</td>
+        <td>${order.user}</td>
+        <td>${order.device}</td>
+        <td>${order.device_name}</td>
+        <td class="btn"><button data-id="${user._id}" class="edit-btn">Edit</button><button data-id="${user._id}" class="delete-btn">Delete</button></td>
+      `;
+      orderTable.appendChild(orderTableRow);
     });
   } catch (error) {
     console.error('Error fetching devices:', error);
@@ -54,7 +88,7 @@ form.addEventListener('submit', async (e) => {
   };
 
   try {
-    const response = await fetch(API_URL, {
+    const deviceData = await fetch(API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,12 +96,12 @@ form.addEventListener('submit', async (e) => {
       body: JSON.stringify(deviceData),
     });
 
-    if (response.ok) {
+    if (deviceData.ok) {
       alert('Device added successfully!');
       form.reset();
       fetchDevices();
     } else {
-      const errorData = await response.json();
+      const errorData = await deviceData.json();
       alert(`Error: ${errorData.error}`);
     }
   } catch (error) {
@@ -77,7 +111,7 @@ form.addEventListener('submit', async (e) => {
 
 
 
-tableBody.addEventListener('click', async (event) => {
+deviceTable.addEventListener('click', async (event) => {
   const deviceId = event.target.getAttribute('data-id');
 
   if (event.target.classList.contains('delete-btn')) {
@@ -85,15 +119,15 @@ tableBody.addEventListener('click', async (event) => {
 
     if (confirmDelete) {
       try {
-        const response = await fetch(`${API_URL}/${deviceId}`, {
+        const deviceData = await fetch(`${API_URL}/${deviceId}`, {
           method: 'DELETE',
         });
 
-        if (response.ok) {
+        if (deviceData.ok) {
           alert('Device deleted successfully!');
           fetchDevices();
         } else {
-          const errorData = await response.json();
+          const errorData = await deviceData.json();
           alert(`Error: ${errorData.error}`);
         }
       } catch (error) {
@@ -104,8 +138,8 @@ tableBody.addEventListener('click', async (event) => {
 
   if (event.target.classList.contains('edit-btn')) {
     try {
-      const response = await fetch(`${API_URL}/${deviceId}`);
-      const device = await response.json();
+      const deviceData = await fetch(`${API_URL}/${deviceId}`);
+      const device = await deviceData.json();
 
       const inputs = form.querySelectorAll('input');
       inputs[0].value = device.device_name;
